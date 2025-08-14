@@ -1,0 +1,602 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #1e1e1e;
+    color: #fff;
+    display: flex;
+    height: 100vh;
+    overflow: hidden; /* Garante que o scroll só aconteça no main-content */
+}
+
+.container {
+    display: flex;
+    width: 100%;
+}
+
+#sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 50px;
+    background-color: #1e1e1e;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0;
+    gap: 20px;
+    border-right: 1px solid #333; /* Borda sutil para separar */
+}
+
+#sidebar button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px; /* Garante que o botão tenha um tamanho fixo */
+    height: 40px; /* Garante que o botão tenha um tamanho fixo */
+    border-radius: 5px; /* Bordas arredondadas */
+    transition: background-color 0.3s ease;
+}
+
+#sidebar button:hover {
+    background-color: #2b2b2b; /* Fundo mais escuro ao passar o mouse */
+}
+
+#sidebar img {
+    width: 24px;
+    height: 24px;
+    filter: invert(100%); /* Transforma a cor do ícone para branco */
+    opacity: 0.7; /* Levemente transparente */
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+#sidebar button:hover img {
+    opacity: 1; /* Opacidade total ao passar o mouse */
+    transform: scale(1.1); /* Efeito de zoom no ícone */
+}
+
+
+.main-content {
+    flex-grow: 1;
+    padding: 30px;
+    overflow-y: auto; /* Adiciona scroll apenas no conteúdo principal se necessário */
+    margin-left: 50px; /* Corrige o recuo da sidebar */
+}
+
+.section {
+    display: none; /* Esconde todas as seções por padrão */
+}
+
+.section.active {
+    display: block; /* Mostra apenas a seção ativa */
+}
+
+/* Estilos para o grupo de formulário onde Renda e Resumo estão */
+.form-group {
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 10px;
+    margin: 15px 0;
+    align-items: center; 
+}
+
+.form-group label {
+    min-width: 120px; 
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"] {
+    flex-grow: 1; /* Permite que o input de renda cresça */
+    max-width: 200px; /* Limita a largura do input de renda para dar espaço ao resumo */
+}
+
+.form-group button {
+    background: #0a84ff; /* Azul vibrante */
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    flex-shrink: 0; /* Impede o botão de diminuir muito */
+}
+
+.form-group button:hover {
+    background-color: #007bff; /* Azul um pouco mais escuro ao passar o mouse */
+    transform: translateY(-1px); /* Leve efeito de "lift" */
+}
+
+.form-group button:active {
+    transform: translateY(0); /* Retorna à posição original ao clicar */
+}
+
+/* Estilos para o novo botão de ação (Criar Nova Pasta) */
+.action-button {
+    background: #28a745; /* Uma cor verde para "Criar" */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    margin-bottom: 20px; /* Espaçamento abaixo do botão */
+}
+
+.action-button:hover {
+    background-color: #218838;
+    transform: translateY(-1px);
+}
+
+.action-button:active {
+    transform: translateY(0);
+}
+
+.action-button.cancel-button { /* Para o botão Cancelar na modal */
+    background-color: #dc3545; /* Cor vermelha para Cancelar */
+}
+
+.action-button.cancel-button:hover {
+    background-color: #c82333;
+}
+
+
+/* NOVO: Estilos para a seção de resumo financeiro */
+#resumo-financeiro {
+    display: flex;
+    flex-direction: column; /* Coloca Gasto e Disponível um abaixo do outro */
+    gap: 5px; /* Espaço entre os spans */
+    margin-left: auto; /* Empurra para a direita, ao lado do botão Salvar */
+    text-align: right;
+    min-width: 180px; /* Garante espaço mínimo para os valores */
+}
+
+#resumo-financeiro span {
+    font-size: 0.95rem;
+    padding: 3px 0;
+}
+
+#gasto-total {
+    color: #ff4500; /* Laranja avermelhado para gasto */
+    font-weight: bold;
+}
+
+#saldo-disponivel {
+    color: #32cd32; /* Verde limão para disponível */
+    font-weight: bold;
+}
+
+
+/* Estilos para listas de despesas */
+#lista-despesas {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+#lista-despesas > li { /* Alvo direto dos itens de categoria */
+    background-color: #2b2b2b;
+    margin-bottom: 8px;
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 0.95rem;
+    display: flex; /* Para controlar o posicionamento da faixa */
+    flex-direction: column;
+    position: relative; /* Essencial para posicionar a faixa */
+    overflow: hidden; /* Garante que a faixa arredondada não vaze */
+}
+
+#lista-despesas li strong {
+    color: #61dafb; /* Cor para a categoria */
+    margin-bottom: 5px;
+}
+
+#lista-despesas ul { /* Estilos para a lista aninhada de despesas dentro da categoria */
+    list-style: disc; /* Bolinhas para os itens de despesa */
+    padding-left: 20px;
+    margin-top: 5px;
+}
+
+#lista-despesas ul li {
+    background-color: transparent; /* Remove o fundo para itens internos */
+    box-shadow: none; /* Remove a sombra para itens internos */
+    padding: 2px 0;
+    margin-bottom: 2px;
+}
+
+/* NOVO: Estilo para a faixa colorida lateral */
+.category-color-bar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 8px; /* Largura da faixa */
+    height: 100%;
+    border-top-right-radius: 8px; /* Arredonda apenas o canto superior direito */
+    border-bottom-right-radius: 8px; /* Arredonda apenas o canto inferior direito */
+    background-color: var(--category-list-color, #61dafb); /* Usa variável CSS, com fallback */
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2); /* Sombra sutil para destacar */
+}
+
+
+/* --- Estilos para os Cards de Pastas com Animação e Opções --- */
+.cards-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 30px;
+    justify-content: flex-start; /* Alinha os cards ao início */
+}
+
+.card-pasta {
+    background-color: #2b2b2b;
+    border-radius: 10px;
+    padding: 20px;
+    min-width: 250px;
+    max-width: 300px;
+    flex: 1; /* Permite que os cards se expandam */
+    display: flex;
+    flex-direction: column;
+    color: #fff;
+    
+    /* Propriedades para a animação */
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out, border-color 0.3s ease;
+    
+    /* Borda transparente padrão, será sobreposta pela variável CSS */
+    border: 2px solid transparent; 
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* Estado inicial para a animação de entrada */
+.card-pasta.entering {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+/* Estado final para a animação de entrada */
+.card-pasta.entered {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Classe que será adicionada via JS para a borda colorida */
+.card-pasta.has-custom-color {
+    border-color: var(--card-border-color, transparent); /* Usa a variável CSS para a cor */
+}
+
+.card-pasta:hover {
+    transform: scale(1.02); /* Leve zoom ao passar o mouse */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5); /* Sombra mais forte no hover */
+}
+
+/* Header do Card (para os 3 pontos) */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #444;
+    padding-bottom: 10px;
+}
+
+.card-header h3 {
+    margin: 0; /* Remove margem padrão do h3 para não afetar o flexbox */
+    font-size: 1.2rem;
+    color: var(--card-title-color, #61dafb); /* Usa a variável CSS, com fallback */
+    border-bottom: none; /* Remove a borda inferior do h3, agora está no .card-header */
+    padding-bottom: 0; /* Remove padding inferior do h3 */
+}
+
+.card-options-button {
+    background: none;
+    border: none;
+    color: #ccc; /* Cor dos 3 pontos */
+    font-size: 1.5rem; /* Tamanho dos 3 pontos */
+    cursor: pointer;
+    padding: 0 5px; /* Espaçamento ao redor dos pontos */
+    line-height: 1; /* Garante que os pontos fiquem alinhados verticalmente */
+    transition: color 0.2s ease;
+}
+
+.card-options-button:hover {
+    color: #fff; /* Cor mais clara no hover */
+}
+
+.card-pasta ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+    flex-grow: 1; /* Permite que a lista ocupe o espaço disponível */
+}
+
+.card-pasta ul li {
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: #ccc; /* Cor do texto das despesas */
+}
+
+.card-total {
+    margin-top: auto; /* Empurra o total para baixo */
+    font-weight: bold;
+    border-top: 1px solid #444;
+    padding-top: 10px;
+    text-align: right;
+    font-size: 1rem;
+    color: #fff; /* Cor do total */
+    padding-right: 5px; /* Pequeno espaçamento à direita */
+}
+
+
+/* --- Estilos para o Menu de Contexto --- */
+.context-menu {
+    display: none; /* Oculto por padrão */
+    position: absolute;
+    background-color: #333;
+    border: 1px solid #555;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    z-index: 1000; /* Garante que fique acima de outros elementos */
+    min-width: 180px; /* Largura mínima para o menu */
+    overflow: hidden; /* Garante que os itens de menu arredondem as bordas */
+}
+
+.context-menu-item {
+    padding: 10px 15px;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-size: 0.95rem;
+}
+
+.context-menu-item:hover {
+    background-color: #0a84ff; /* Cor de destaque ao passar o mouse */
+}
+
+/* Estilo para o item do seletor de cor no menu */
+.context-menu-item.color-picker-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Estilo para o input de cor dentro do menu */
+#color-picker {
+    -webkit-appearance: none; /* Remove estilos padrão do navegador */
+    -moz-appearance: none;
+    appearance: none;
+    border: none;
+    width: 24px;
+    height: 24px;
+    background-color: transparent;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+}
+
+#color-picker::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+#color-picker::-webkit-color-swatch {
+    border-radius: 50%; /* Faz o swatch ser redondo */
+    border: 1px solid #555;
+}
+
+#color-picker::-moz-color-swatch-wrapper {
+    padding: 0;
+}
+
+#color-picker::-moz-color-swatch {
+    border-radius: 50%;
+    border: 1px solid #555;
+}
+
+
+/* Estilos para a seção de gráfico */
+#graph-section canvas {
+    display: block; /* Garante que o canvas se comporte como um elemento de bloco */
+    width: 100%;    /* Garante que o canvas ocupe a largura total disponível */
+    height: 400px;  /* Altura fixa para o canvas do gráfico */
+    max-height: 400px; /* Reforça a altura máxima */
+    background-color: #2b2b2b;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    box-sizing: border-box; /* Inclui padding e borda na dimensão total do elemento */
+}
+
+/* --- Estilos para a Modal de Prompt Customizado e Adicionar Despesa --- */
+.custom-modal-overlay {
+    display: none; /* Oculto por padrão */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Fundo escuro semitransparente */
+    justify-content: center; /* Manter aqui para quando estiver flex */
+    align-items: center;     /* Manter aqui para quando estiver flex */
+    z-index: 2000; /* Garante que fique acima de tudo */
+}
+
+.custom-modal-overlay.active {
+    display: flex; /* AGORA SIM, SÓ APARECE QUANDO ESTÁ ATIVA */
+}
+
+.custom-modal-content {
+    background-color: #2b2b2b;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    width: 350px;
+    max-width: 90%;
+    text-align: center;
+    transform: translateY(-20px); /* Para animação de entrada */
+    opacity: 0; /* Para animação de entrada */
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+/* Estado de exibição para a modal */
+.custom-modal-overlay.active .custom-modal-content {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.custom-modal-content h3 {
+    color: #61dafb;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+}
+
+.custom-modal-content p {
+    color: #ccc;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+}
+
+#custom-prompt-input {
+    width: calc(100% - 20px); /* Largura total menos padding */
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #555;
+    border-radius: 5px;
+    background-color: #333;
+    color: white;
+    font-size: 1rem;
+}
+
+/* NOVO: Estilos para os campos de formulário dentro do modal (para Adicionar Despesa) */
+.form-group-modal {
+    margin-bottom: 15px;
+    text-align: left; /* Alinha labels e inputs à esquerda dentro do modal */
+}
+
+.form-group-modal label {
+    display: block; /* Cada label em uma nova linha */
+    color: #ccc;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+.form-group-modal input[type="text"],
+.form-group-modal input[type="number"] {
+    width: calc(100% - 22px); /* Largura total menos padding e borda */
+    padding: 10px;
+    border: 1px solid #555;
+    border-radius: 5px;
+    background-color: #333;
+    color: white;
+    font-size: 1rem;
+    box-sizing: border-box; /* Inclui padding e borda na largura */
+}
+
+/* Estilos para o nome da categoria dentro do modal de adicionar despesa */
+#add-expense-modal-category-name {
+    color: #61dafb; /* Cor de destaque para o nome da categoria */
+}
+
+/* ... (Seu CSS existente) ... */
+
+/* --- Estilos para a Modal de Prompt Customizado e Adicionar Despesa --- */
+.custom-modal-overlay {
+    display: none; /* Oculto por padrão */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Fundo escuro semitransparente */
+    justify-content: center; /* Manter aqui para quando estiver flex */
+    align-items: center;     /* Manter aqui para quando estiver flex */
+    z-index: -1; /* Z-index baixo quando oculto para não interferir */
+    pointer-events: none; /* Não captura cliques/eventos quando oculto */
+    /* Transições para o efeito de fade-in/out e garantir que o z-index mude após o opacity */
+    transition: opacity 0.3s ease-out, z-index 0s 0.3s;
+    opacity: 0; /* Começa transparente para a transição */
+}
+
+.custom-modal-overlay.active {
+    display: flex; /* Ativa display flex para mostrar o modal */
+    opacity: 1; /* Torna o modal visível */
+    z-index: 2000; /* Z-index alto quando ativo, garantindo que fique na frente */
+    pointer-events: all; /* Captura cliques/eventos quando ativo */
+    /* Transições: z-index sem delay ao ativar, para que apareça imediatamente */
+    transition: opacity 0.3s ease-out, z-index 0s 0s;
+}
+
+/* A animação do conteúdo do modal (opacidade e transformação) */
+.custom-modal-overlay .custom-modal-content {
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+.custom-modal-overlay.active .custom-modal-content {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+
+/* Estilo para a opção "Excluir Card" no menu de contexto */
+#option-delete-card {
+    color: #dc3545; /* Cor vermelha para indicar ação de exclusão */
+    font-weight: bold;
+}
+
+#option-delete-card:hover {
+    background-color: #dc3545; /* Fundo vermelho no hover */
+    color: white; /* Texto branco no fundo vermelho */
+}
+
+/* Nenhuma alteração é necessária para a modal de confirmação,
+   pois ela reutiliza as classes .custom-modal-overlay e .custom-modal-content
+   que já foram estilizadas. */
+/* ... (O restante do seu CSS permanece o mesmo) ... */
+
+
+/* style.css */
+.custom-modal-overlay {
+    display: none; /* Escondido por padrão */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex; /* Para flexbox de centralização */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.custom-modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.custom-modal-content {
+    background-color: #282c34;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    color: #fff;
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
+}
+
+.custom-modal-overlay.active .custom-modal-content {
+    transform: translateY(0);
+}

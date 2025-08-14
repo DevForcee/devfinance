@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Finance DEV</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div id="sidebar">
+            <button id="btn-home" title="Renda & Gastos">
+                <img src="./icons/dollar-sign.svg" alt="Renda" />
+            </button>
+            <button id="btn-graph" title="Gráficos">
+                <img src="./icons/chart-no-axes-column.svg" alt="Gráficos" />
+            </button>
+        </div>
+
+        <div class="main-content">
+            <div id="home-section" class="section active">
+                <h2>Renda & Gastos</h2>
+
+                <div class="form-group">
+                    <label for="input-renda">Renda mensal:</label>
+                    <input type="number" id="input-renda" placeholder="Ex: 2500" />
+                    <button onclick="salvarRenda()">Salvar</button>
+                    <div id="resumo-financeiro">
+                        <span id="gasto-total">Gasto: R$ 0.00</span>
+                        <span id="saldo-disponivel">Disponível: R$ 0.00</span>
+                    </div>
+                </div>
+
+                <hr style="margin: 20px 0; border-color: #444;" />
+
+                <button id="btn-criar-pasta" class="action-button">Criar Nova Pasta</button>
+                
+                <div id="pastas-container" class="cards-wrapper"></div>
+
+                <h3>Detalhes das Despesas</h3>
+                <ul id="lista-despesas"></ul>
+
+            </div>
+
+            <div id="graph-section" class="section">
+                <h2>Gráfico de Gastos por Categoria</h2>
+                <canvas id="graficoDespesas"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div id="context-menu" class="context-menu">
+        <div class="context-menu-item" id="option-add-expense">Adicionar despesa</div> 
+        <div class="context-menu-item" id="option-rename">Renomear</div>
+        <div class="context-menu-item color-picker-item">
+            Cores para o card
+            <input type="color" id="color-picker" style="margin-left: 10px; cursor: pointer;">
+        </div>
+        <hr style="border-color: #444; margin: 5px 0;"> 
+        <div class="context-menu-item" id="option-delete-card">Excluir Card</div> 
+    </div>
+
+    <div id="custom-prompt-modal" class="custom-modal-overlay">
+        <div class="custom-modal-content">
+            <h3 id="custom-prompt-title"></h3>
+            <p id="custom-prompt-message"></p>
+            <input type="text" id="custom-prompt-input" placeholder="Digite aqui...">
+            <div class="custom-modal-buttons">
+                <button id="custom-prompt-ok" class="action-button">OK</button>
+                <button id="custom-prompt-cancel" class="action-button cancel-button">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="add-expense-modal" class="custom-modal-overlay">
+        <div class="custom-modal-content">
+            <h3>Adicionar Despesa à <span id="add-expense-modal-category-name"></span></h3>
+            <div class="form-group-modal">
+                <label for="add-expense-name">Nome da despesa:</label>
+                <input type="text" id="add-expense-name" placeholder="Ex: Aluguel" />
+            </div>
+            <div class="form-group-modal">
+                <label for="add-expense-value">Valor:</label>
+                <input type="number" id="add-expense-value" placeholder="Ex: 500" />
+            </div>
+            <div class="custom-modal-buttons">
+                <button id="add-expense-ok" class="action-button">Adicionar</button>
+                <button id="add-expense-cancel" class="action-button cancel-button">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="custom-confirm-modal" class="custom-modal-overlay">
+        <div class="custom-modal-content">
+            <h3 id="custom-confirm-title"></h3>
+            <p id="custom-confirm-message"></p>
+            <div class="custom-modal-buttons">
+                <button id="custom-confirm-ok" class="action-button">Sim</button>
+                <button id="custom-confirm-cancel" class="action-button cancel-button">Não</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+{
+  "renda": 13095,
+  "pastas": {
+    "a": {
+      "despesas": [
+        {
+          "nome": "a",
+          "valor": 1
+        },
+        {
+          "nome": "a",
+          "valor": 1
+        }
+      ],
+      "color": "#8000ff"
+    },
+    "b": {
+      "despesas": [
+        {
+          "nome": "a",
+          "valor": 2
+        }
+      ],
+      "color": "#ff1a1a"
+    },
+    "Carro": {
+      "despesas": [
+        {
+          "nome": "Gasolina",
+          "valor": 200
+        }
+      ],
+      "color": "#fbf660"
+    },
+    "Casa": {
+      "despesas": [
+        {
+          "nome": "Energia",
+          "valor": 300
+        }
+      ],
+      "color": "#61dafb"
+    }
+  }
+}
